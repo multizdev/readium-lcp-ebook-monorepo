@@ -12,7 +12,6 @@ import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 
 import { generateSha256, saveFile, storeEncryptedContent } from '@/server/util';
-import { generateLicense } from '@/server/readium/license';
 
 // Ensure that the uploads directory exists
 function ensureUploadsDirectory(): string {
@@ -69,7 +68,6 @@ export async function POST(req: NextRequest): Promise<Response | undefined> {
     // Set content ID, encryption key, provider, and rights
     const contentId = uuidv4(); // You should generate this dynamically
     const encryptionKey = crypto.randomBytes(32).toString('hex'); // Replace with the actual encryption key
-    const provider = 'http://localhost:3000'; // Replace with your provider
 
     // Store the encrypted content on LCP server
     const lcpResponse = await storeEncryptedContent(
@@ -83,38 +81,9 @@ export async function POST(req: NextRequest): Promise<Response | undefined> {
       throw new Error('Failed to store encrypted content on LCP server');
     }
 
-    // User information for license generation
-    const userInfo = {
-      id: uuidv4(),
-      email: 'user@example.com',
-      hint: 'The title of the first book you ever read',
-      passphraseHash: generateSha256('userHash'), // Use SHA-256 hashed passphrase
-    };
-
-    // Rights information for the license
-    const rights = {
-      print: 10, // Allow 10 pages to be printed
-      copy: 2048, // Allow 2048 characters to be copied
-      start: '2024-09-08T01:00:00Z',
-      end: '2024-12-08T01:00:00Z',
-    };
-
-    // Generate the license for the content
-    const licenseResponse = await generateLicense(
-      contentId,
-      provider,
-      userInfo,
-      rights,
-    );
-
-    if (licenseResponse.status !== 201) {
-      throw new Error('Failed to generate license');
-    }
-
     // Return success response
     return NextResponse.json({
       message: 'File uploaded, stored, and license generated successfully',
-      license: licenseResponse.data,
       content: lcpResponse.data,
       contentId,
     });
