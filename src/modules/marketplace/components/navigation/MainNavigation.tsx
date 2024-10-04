@@ -25,6 +25,7 @@ import {
   DropdownMenuItem,
 } from '@shadcn/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@shadcn/components/ui/sheet';
+import CartAction from '@marketplace/components/elements/user/cart/CartAction';
 
 function MainNavigation({ content }: { content: ReactElement }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -46,7 +47,7 @@ function MainNavigation({ content }: { content: ReactElement }) {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Top Navigation Bar */}
-      <header className="bg-white border-b">
+      <header className="w-full bg-white border-b">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -74,13 +75,10 @@ function MainNavigation({ content }: { content: ReactElement }) {
 
             {/* Navigation Items */}
             <div className="hidden md:flex items-center space-x-4">
-              <Button variant="ghost" size="sm">
-                <ShoppingCart className="mr-2 h-4 w-4" />
-                Cart
-              </Button>
+              <CartAction />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm">
+                  <Button variant="outline" size="sm">
                     <User className="mr-2 h-4 w-4" />
                     Account
                   </Button>
@@ -153,7 +151,6 @@ function MainNavigation({ content }: { content: ReactElement }) {
         >
           <div className="p-4 flex justify-end">
             <Button
-              variant="outline"
               size="sm"
               onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
               aria-label={

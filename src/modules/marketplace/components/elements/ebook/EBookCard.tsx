@@ -13,10 +13,13 @@ import {
 import { Button } from '@shadcn/components/ui/button';
 
 import { ContentWithMetadata } from '@/types';
+import useCartStore from '@marketplace/stores/useCartStore';
 
 function EBookCard({ book }: { book: ContentWithMetadata }): ReactElement {
   const { id, metadata } = book;
   const { title, authors, categories, price, discount } = metadata[0];
+
+  const { cart, setCart } = useCartStore();
 
   return (
     <Card key={id} className="flex flex-col">
@@ -47,7 +50,7 @@ function EBookCard({ book }: { book: ContentWithMetadata }): ReactElement {
           </span>
           <span className="line-through">${price.toFixed(2)}</span>
         </div>
-        <Button>
+        <Button onClick={() => setCart([...cart, metadata[0]])}>
           <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
         </Button>
       </CardFooter>
