@@ -6,6 +6,8 @@ import localFont from 'next/font/local';
 
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 
+import { SWRConfig } from 'swr';
+
 import '@/app/globals.css';
 
 const geistSans = localFont({
@@ -29,7 +31,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AntdRegistry>{children}</AntdRegistry>
+        <AntdRegistry>
+          <SWRConfig
+            value={{
+              refreshInterval: 3000,
+              fetcher: (resource, init) =>
+                fetch(resource, init).then((res) => res.json()),
+            }}
+          >
+            {children}
+          </SWRConfig>
+        </AntdRegistry>
       </body>
     </html>
   );

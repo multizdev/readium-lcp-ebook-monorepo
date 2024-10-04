@@ -1,11 +1,8 @@
 import { create } from 'zustand';
 
-import { Prisma } from '@prisma/client';
 import { FormInstance } from 'antd';
 
-export type ContentWithMetadata = Prisma.contentGetPayload<{
-  include: { metadata: true };
-}>;
+import { ContentWithMetadata } from '@/types';
 
 type State = {
   metaDataFormInstance: FormInstance | null;
