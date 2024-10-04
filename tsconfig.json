@@ -23,6 +23,7 @@
       "@/*": ["./src/*"],
       "@modules/*": ["./src/modules/*"],
       "@admin/*": ["./src/modules/admin/*"],
+      "@marketplace/*": ["./src/modules/marketplace/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

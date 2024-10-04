@@ -2,8 +2,8 @@
 
 import React, { ReactElement } from 'react';
 
-import DashboardPage from '@admin/dashboard/page';
+import HomePage from '@marketplace/pages/HomePage';
 
 export default function Home(): ReactElement {
-  return <DashboardPage />;
+  return <HomePage />;
 }
