@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model content {
+  id             String     @id @db.VarChar(255)
+  encryption_key Bytes
+  location       String
+  length         BigInt?
+  sha256         String?    @db.VarChar(64)
+  type           String     @default("application/epub+zip") @db.VarChar(255)
+  license        license[]
+  metadata       metadata[]
+}
+
+model event {
+  id                Int            @id @default(autoincrement())
+  device_name       String?        @db.VarChar(255)
+  timestamp         DateTime
+  type              Int
+  device_id         String?        @db.VarChar(255)
+  license_status_fk Int
+  license_status    license_status @relation(fields: [license_status_fk], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([license_status_fk], map: "license_status_fk_index")
+}
+
+model license {
+  id           String    @id @db.VarChar(255)
+  user_id      String    @db.VarChar(255)
+  provider     String    @db.VarChar(255)
+  issued       DateTime  @db.Timestamp(0)
+  updated      DateTime? @db.Timestamp(0)
+  rights_print Int?
+  rights_copy  Int?
+  rights_start DateTime? @db.Timestamp(0)
+  rights_end   DateTime? @db.Timestamp(0)
+  content_fk   String    @db.VarChar(255)
+  lsd_status   Int?      @default(0)
+  content      content   @relation(fields: [content_fk], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model license_status {
+  id                   Int       @id @default(autoincrement())
+  status               Int       @db.SmallInt
+  license_updated      DateTime
+  status_updated       DateTime
+  device_count         Int?      @db.SmallInt
+  potential_rights_end DateTime?
+  license_ref          String    @db.VarChar(255)
+  rights_end           DateTime?
+  event                event[]
+
+  @@index([license_ref], map: "license_ref_index")
+}
+
+model metadata {
+  id         Int      @id @default(autoincrement())
+  content_id String   @db.VarChar(255)
+  title      String   @db.VarChar(255)
+  authors    String[]
+  categories String[]
+  price      Float
+  discount   Float
+  content    content  @relation(fields: [content_id], references: [id], onDelete: Cascade)
+
+  @@index([content_id], map: "content_id_index")
+}
