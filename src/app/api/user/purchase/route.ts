@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { metadata } from '@prisma/client';
 import { generateSha256 } from '@/server/util';
 import { generateLicense } from '@/server/readium/license';
 
 export async function POST(req: NextRequest): Promise<Response | undefined> {
-  const { bookData }: { bookData: metadata } = await req.json();
+  const { content_id }: { content_id: string } = await req.json();
+
+  console.log('DATA', content_id);
 
   // User information for license generation
   const userInfo = {
@@ -16,6 +17,8 @@ export async function POST(req: NextRequest): Promise<Response | undefined> {
     hint: 'The title of the first book you ever read',
     passphraseHash: generateSha256('userHash'), // Use SHA-256 hashed passphrase
   };
+
+  console.log('User Info', userInfo);
 
   const provider = 'http://localhost:3000'; // Replace with your provider
 
@@ -27,10 +30,12 @@ export async function POST(req: NextRequest): Promise<Response | undefined> {
     end: '2024-12-08T01:00:00Z',
   };
 
+  console.log('Rights', rights);
+
   try {
     // Generate the license for the content
     const licenseResponse = await generateLicense(
-      bookData.content_id,
+      content_id,
       provider,
       userInfo,
       rights,
@@ -40,9 +45,17 @@ export async function POST(req: NextRequest): Promise<Response | undefined> {
       throw new Error('Failed to generate license');
     }
 
-    return NextResponse.json({ bookId: bookData.content_id });
+    console.log('License', licenseResponse);
+
+    return NextResponse.json({
+      license: {
+        ...licenseResponse.data,
+      },
+      content_id,
+    });
   } catch (error) {
     if (error instanceof Error) {
+      console.log('ERROR', error.message);
       return NextResponse.json(
         { error: `File upload or publish failed: ${error}` },
         { status: 500 },
