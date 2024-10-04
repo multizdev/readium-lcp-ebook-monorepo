@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 
 import axios, { AxiosResponse } from 'axios';
 
-import usePublicationStore, {
-  ContentWithMetadata,
-} from '@admin/publications/store/usePublicationStore';
+import usePublicationStore from '@admin/publications/store/usePublicationStore';
+import { ContentWithMetadata } from '@/types';
 
 function usePublication() {
   const { setContentFiles } = usePublicationStore();

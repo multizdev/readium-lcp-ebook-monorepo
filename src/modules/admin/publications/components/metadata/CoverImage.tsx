@@ -5,11 +5,10 @@ import Image from 'next/image';
 import { List, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 
-import usePublicationStore, {
-  ContentWithMetadata,
-} from '@admin/publications/store/usePublicationStore';
+import usePublicationStore from '@admin/publications/store/usePublicationStore';
 import useCoverImage from '@admin/publications/hooks/useCoverImage';
 import usePublication from '@admin/publications/hooks/usePublication';
+import { ContentWithMetadata } from '@/types';
 
 function FileContainer({ item }: { item: ContentWithMetadata }): ReactElement {
   const { fileList, customRequest, onChange, onPreview, coverImageUrl } =

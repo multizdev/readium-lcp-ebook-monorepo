@@ -9,9 +9,9 @@ import {
   Search,
   ShoppingCart,
   User,
-  X,
   ChevronLeft,
   ChevronRight,
+  Book,
 } from 'lucide-react';
 
 import { Input } from '@shadcn/components/ui/input';
@@ -50,9 +50,10 @@ function MainNavigation({ content }: { content: ReactElement }) {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <div className="flex-shrink-0">
-              <Link href="/" className="text-2xl font-bold text-primary">
-                Ebook Marketplace
+            <div className="flex items-center gap-2 flex-shrink-0 text-primary">
+              <Book className="h-6 w-6" />
+              <Link href="/" className="text-2xl font-bold">
+                Marketplace
               </Link>
             </div>
 
@@ -106,16 +107,7 @@ function MainNavigation({ content }: { content: ReactElement }) {
                 </SheetTrigger>
                 <SheetContent side="right">
                   <div className="flex flex-col h-full">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-lg font-semibold">Menu</span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <X className="h-6 w-6" />
-                      </Button>
-                    </div>
+                    <span className="text-lg font-semibold">Menu</span>
                     <div className="mb-4">
                       <Input type="search" placeholder="Search for books..." />
                     </div>
@@ -157,11 +149,11 @@ function MainNavigation({ content }: { content: ReactElement }) {
         <aside
           className={`hidden md:flex flex-col ${
             isSidebarCollapsed ? 'w-16' : 'w-64'
-          } bg-gray-100 transition-all duration-300 ease-in-out`}
+          } transition-all duration-300 ease-in-out border-r bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60`}
         >
           <div className="p-4 flex justify-end">
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
               onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
               aria-label={

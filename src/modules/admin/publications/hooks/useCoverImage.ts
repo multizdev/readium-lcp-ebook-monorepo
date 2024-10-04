@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { type GetProp, message, UploadFile, type UploadProps } from 'antd';
 
-import { ContentWithMetadata } from '@admin/publications/store/usePublicationStore';
+import { ContentWithMetadata } from '@/types';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 

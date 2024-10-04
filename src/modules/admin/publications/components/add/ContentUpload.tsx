@@ -3,11 +3,10 @@ import React, { ReactElement } from 'react';
 import { Button, List, Spin, Upload } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 
-import usePublicationStore, {
-  ContentWithMetadata,
-} from '@admin/publications/store/usePublicationStore';
 import usePublication from '@admin/publications/hooks/usePublication';
 import useUpload from '@admin/publications/hooks/useUpload';
+import usePublicationStore from '@admin/publications/store/usePublicationStore';
+import { ContentWithMetadata } from '@/types';
 
 const { Dragger } = Upload;
 
