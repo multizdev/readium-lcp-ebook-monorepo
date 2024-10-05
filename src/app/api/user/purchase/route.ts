@@ -1,32 +1,54 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { v4 as uuidv4 } from 'uuid';
+import { jwtVerify } from 'jose';
+import { PrismaClient, user as User } from '@prisma/client';
 
 import { generateSha256 } from '@/server/util';
 import { generateLicense } from '@/server/readium/license';
 
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || '');
+const prisma = new PrismaClient();
+
 export async function POST(req: NextRequest): Promise<Response | undefined> {
   const { content_id }: { content_id: string } = await req.json();
+  const token = req.cookies.get('userSessionId')?.value;
 
-  // User information for license generation
-  const userInfo = {
-    id: uuidv4(),
-    email: 'user@example.com',
-    hint: 'The title of the first book you ever read',
-    passphraseHash: generateSha256('userHash'), // Use SHA-256 hashed passphrase
-  };
-
-  const provider = 'http://localhost:3000'; // Replace with your provider
-
-  // Rights information for the license
-  const rights = {
-    print: 10, // Allow 10 pages to be printed
-    copy: 2048, // Allow 2048 characters to be copied
-    start: '2024-09-08T01:00:00Z',
-    end: '2024-12-08T01:00:00Z',
-  };
-
+  if (!token) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   try {
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const userId = payload.id as string;
+
+    // Find user details from the database
+    const user: User | null = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const { id, email, name, password_hash } = user;
+
+    // User information for license generation
+    const userInfo = {
+      id,
+      email,
+      hint: name,
+      passphraseHash: generateSha256(password_hash), // Use SHA-256 hashed passphrase
+    };
+
+    const provider = process.env.PROVIDER || ''; // Replace with your provider
+
+    // Rights information for the license
+    const rights = {
+      print: 10, // Allow 10 pages to be printed
+      copy: 2048, // Allow 2048 characters to be copied
+      start: '2024-09-08T01:00:00Z',
+      end: '2024-12-08T01:00:00Z',
+    };
+
     // Generate the license for the content
     const licenseResponse = await generateLicense(
       content_id,
@@ -47,9 +69,8 @@ export async function POST(req: NextRequest): Promise<Response | undefined> {
     });
   } catch (error) {
     if (error instanceof Error) {
-      console.log('ERROR', error.message);
       return NextResponse.json(
-        { error: `File upload or publish failed: ${error}` },
+        { error: `License generation failed: ${error}` },
         { status: 500 },
       );
     }

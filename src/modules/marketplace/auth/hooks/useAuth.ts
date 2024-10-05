@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { message } from 'antd';
 
 interface AuthFormState {
@@ -26,7 +26,7 @@ function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { replace } = useRouter();
+  const { replace, refresh } = useRouter();
 
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -36,6 +36,27 @@ function useAuth() {
   const handleSignupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setSignupForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const logout = async () => {
+    setLoading(true);
+    try {
+      // Delete the sessionId cookie
+      const { data }: AxiosResponse<{ message: string }> = await axios.post(
+        '/api/auth/user/logout',
+      );
+
+      await message.success(data.message);
+      refresh();
+    } catch (error) {
+      if (error instanceof Error) {
+        // handle error (e.g., display error message)
+        await message.error((error as any).response.data.error);
+      }
+    } finally {
+      replace('/');
+      setLoading(false);
+    }
   };
 
   const login = async () => {
@@ -85,6 +106,7 @@ function useAuth() {
     handleSignupChange,
     login,
     signup,
+    logout,
   };
 }
 

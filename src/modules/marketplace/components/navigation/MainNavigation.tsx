@@ -1,8 +1,9 @@
 'use client';
 
-import { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import {
   Menu,
@@ -12,7 +13,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Book,
+  Loader2,
 } from 'lucide-react';
+import { user } from '@prisma/client';
+import axios, { AxiosResponse } from 'axios';
 
 import { Input } from '@shadcn/components/ui/input';
 import { Button } from '@shadcn/components/ui/button';
@@ -21,13 +25,41 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from '@shadcn/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@shadcn/components/ui/sheet';
+
 import CartAction from '@marketplace/components/elements/user/cart/CartAction';
+import useUserStore from '@marketplace/stores/useUserStore';
+import useAuth from '@marketplace/auth/hooks/useAuth';
 
 function MainNavigation({ content }: { content: ReactElement }) {
+  const { replace } = useRouter();
+
+  const { logout, loading } = useAuth();
+
+  const { user, setUser } = useUserStore();
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        const { data }: AxiosResponse<user> =
+          await axios.get('/api/user/session');
+
+        console.log('USER', user);
+
+        setUser(data);
+      } catch (error) {
+        setUser(null);
+      }
+    };
+
+    (async () => fetchSession())();
+  }, []);
 
   const categories = [
     'Fiction',
@@ -78,17 +110,41 @@ function MainNavigation({ content }: { content: ReactElement }) {
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm">
                     <User className="mr-2 h-4 w-4" />
-                    Account
+                    {user ? user.name : 'Login'}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  {/*<DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Orders</DropdownMenuItem>
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
-                  <DropdownMenuSeparator />*/}
-                  <DropdownMenuItem>Log out</DropdownMenuItem>
+                  {user && (
+                    <>
+                      <DropdownMenuLabel>Account</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>My Books</DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={async () => {
+                          await logout();
+                        }}
+                      >
+                        {loading && (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
+                        Log out
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                  {!user && (
+                    <>
+                      <DropdownMenuItem onClick={() => replace('/user/login')}>
+                        Log In
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={() => replace('/user/register')}
+                      >
+                        Register
+                      </DropdownMenuItem>
+                    </>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

@@ -4,11 +4,11 @@
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import Image from 'next/image';
 
-import { ShoppingCart, X } from 'lucide-react';
+import { Loader2, ShoppingCart, X } from 'lucide-react';
 
 import axios from 'axios';
 import { metadata } from '@prisma/client';
@@ -27,6 +27,8 @@ import useCartStore from '@marketplace/stores/useCartStore';
 function CartAction() {
   const { cart, setCart } = useCartStore();
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   const total = cart.reduce((acc, item) => acc + item.price, 0);
 
   const removeFromCart = (id: number) => {
@@ -34,15 +36,17 @@ function CartAction() {
   };
 
   const handleCheckout = async () => {
-    console.log('CART', cart);
-
     cart.map(async ({ content_id }: metadata) => {
-      console.log('ID', content_id);
-
-      const { data } = await axios.post('/api/user/purchase', {
+      setLoading(true);
+      const { data, status } = await axios.post('/api/user/purchase', {
         content_id,
       });
-      console.log(`Content ${content_id}: `, data);
+
+      if (status === 200) {
+        setCart([]);
+        console.log(`Content ${content_id}: `, data);
+      }
+      setLoading(false);
     });
   };
 
@@ -113,7 +117,13 @@ function CartAction() {
               <span className="font-medium">Total</span>
               <span className="font-medium">${total.toFixed(2)}</span>
             </div>
-            <Button size="lg" className="w-full" onClick={handleCheckout}>
+            <Button
+              size="lg"
+              className="w-full"
+              onClick={handleCheckout}
+              disabled={loading}
+            >
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Checkout
             </Button>
           </div>

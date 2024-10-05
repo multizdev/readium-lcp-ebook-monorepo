@@ -18,10 +18,6 @@ function useAuth() {
       // Delete the sessionId cookie
       const { data }: AxiosResponse<{ message: string }> = await axios.post(
         '/api/auth/admin/logout',
-        {
-          username,
-          password,
-        },
       );
 
       await message.success(data.message);

@@ -3,13 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 import { PrismaClient } from '@prisma/client';
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'your_jwt_secret_key',
-);
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || '');
 const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
-  const token = req.cookies.get('sessionId')?.value;
+  const token = req.cookies.get('userSessionId')?.value;
 
   if (!token) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -34,7 +32,3 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
   }
 }
-
-export const config = {
-  matcher: ['/api/auth/user/session'],
-};
