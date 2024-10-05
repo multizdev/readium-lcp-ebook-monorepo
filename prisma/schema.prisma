@@ -7,6 +7,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model user {
+  id             String    @id @default(cuid()) @db.VarChar(255)
+  email          String    @unique @db.VarChar(255)
+  password_hash  String    @db.VarChar(255) // Store hashed password
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  sessionToken   String?   @unique @db.VarChar(255) // Session token
+  sessionExpires DateTime?
+
+  @@index([email], map: "email_index")
+}
+
+model admin {
+  id             String    @id @default(cuid()) @db.VarChar(255)
+  username       String    @unique @db.VarChar(255)
+  password_hash  String    @db.VarChar(255)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  sessionToken   String?   @unique @db.VarChar(255) // Session token
+  sessionExpires DateTime?
+
+  @@index([username], map: "admin_email_index")
+}
+
 model content {
   id             String     @id @db.VarChar(255)
   encryption_key Bytes
