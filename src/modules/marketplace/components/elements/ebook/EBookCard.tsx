@@ -1,7 +1,9 @@
 import React, { ReactElement } from 'react';
 
 import Image from 'next/image';
+
 import { ShoppingCart } from 'lucide-react';
+import { metadata } from '@prisma/client';
 
 import {
   Card,
@@ -12,12 +14,10 @@ import {
 } from '@shadcn/components/ui/card';
 import { Button } from '@shadcn/components/ui/button';
 
-import { ContentWithMetadata } from '@/types';
 import useCartStore from '@marketplace/stores/useCartStore';
 
-function EBookCard({ book }: { book: ContentWithMetadata }): ReactElement {
-  const { id, metadata } = book;
-  const { title, authors, categories, price, discount } = metadata[0];
+function EBookCard({ book }: { book: metadata }): ReactElement {
+  const { id, title, authors, categories, price, discount, content_id } = book;
 
   const { cart, setCart } = useCartStore();
 
@@ -26,7 +26,7 @@ function EBookCard({ book }: { book: ContentWithMetadata }): ReactElement {
       <CardHeader>
         <div className="aspect-[3/4] relative mb-4">
           <Image
-            src={`/publications/cover-images/${id}.png`}
+            src={`/publications/cover-images/${content_id}.png`}
             alt={title}
             layout="fill"
             objectFit="cover"
@@ -50,7 +50,7 @@ function EBookCard({ book }: { book: ContentWithMetadata }): ReactElement {
           </span>
           <span className="line-through">${price.toFixed(2)}</span>
         </div>
-        <Button onClick={() => setCart([...cart, metadata[0]])}>
+        <Button onClick={() => setCart([...cart, book])}>
           <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
         </Button>
       </CardFooter>
