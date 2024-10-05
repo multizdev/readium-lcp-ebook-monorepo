@@ -8,8 +8,6 @@ import { generateLicense } from '@/server/readium/license';
 export async function POST(req: NextRequest): Promise<Response | undefined> {
   const { content_id }: { content_id: string } = await req.json();
 
-  console.log('DATA', content_id);
-
   // User information for license generation
   const userInfo = {
     id: uuidv4(),
@@ -17,8 +15,6 @@ export async function POST(req: NextRequest): Promise<Response | undefined> {
     hint: 'The title of the first book you ever read',
     passphraseHash: generateSha256('userHash'), // Use SHA-256 hashed passphrase
   };
-
-  console.log('User Info', userInfo);
 
   const provider = 'http://localhost:3000'; // Replace with your provider
 
@@ -29,8 +25,6 @@ export async function POST(req: NextRequest): Promise<Response | undefined> {
     start: '2024-09-08T01:00:00Z',
     end: '2024-12-08T01:00:00Z',
   };
-
-  console.log('Rights', rights);
 
   try {
     // Generate the license for the content
@@ -44,8 +38,6 @@ export async function POST(req: NextRequest): Promise<Response | undefined> {
     if (licenseResponse.status !== 201) {
       throw new Error('Failed to generate license');
     }
-
-    console.log('License', licenseResponse);
 
     return NextResponse.json({
       license: {
