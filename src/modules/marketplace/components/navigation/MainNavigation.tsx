@@ -19,9 +19,7 @@ import { Button } from '@shadcn/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
   DropdownMenuItem,
 } from '@shadcn/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@shadcn/components/ui/sheet';
@@ -84,12 +82,12 @@ function MainNavigation({ content }: { content: ReactElement }) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  {/*<DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Profile</DropdownMenuItem>
                   <DropdownMenuItem>Orders</DropdownMenuItem>
                   <DropdownMenuItem>Settings</DropdownMenuItem>
-                  <DropdownMenuSeparator />
+                  <DropdownMenuSeparator />*/}
                   <DropdownMenuItem>Log out</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
