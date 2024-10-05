@@ -47,8 +47,7 @@ function useAuth() {
         password: loginForm.password,
       });
 
-      console.log('LOGIN', response.data);
-      await message.success('Login Successfully.');
+      await message.success(response.data.message);
       replace('/');
     } catch (err) {
       setError('Login failed. Please check your credentials and try again.');
