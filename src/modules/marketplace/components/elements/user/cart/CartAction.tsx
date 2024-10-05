@@ -10,6 +10,9 @@ import Image from 'next/image';
 
 import { ShoppingCart, X } from 'lucide-react';
 
+import axios from 'axios';
+import { metadata } from '@prisma/client';
+
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -28,6 +31,19 @@ function CartAction() {
 
   const removeFromCart = (id: number) => {
     setCart(cart.filter((item) => item.id !== id));
+  };
+
+  const handleCheckout = async () => {
+    console.log('CART', cart);
+
+    cart.map(async ({ content_id }: metadata) => {
+      console.log('ID', content_id);
+
+      const { data } = await axios.post('/api/user/purchase', {
+        content_id,
+      });
+      console.log(`Content ${content_id}: `, data);
+    });
   };
 
   return (
@@ -97,7 +113,7 @@ function CartAction() {
               <span className="font-medium">Total</span>
               <span className="font-medium">${total.toFixed(2)}</span>
             </div>
-            <Button size="lg" className="w-full">
+            <Button size="lg" className="w-full" onClick={handleCheckout}>
               Checkout
             </Button>
           </div>
