@@ -13,6 +13,7 @@ function usePublication() {
     setLoading(true);
     const { data }: AxiosResponse<ContentWithMetadata[]> = await axios.get(
       '/api/admin/publications/content/all',
+      { withCredentials: true },
     );
 
     if (data) {

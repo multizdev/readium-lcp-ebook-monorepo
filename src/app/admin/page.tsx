@@ -1,9 +1,9 @@
-'use client';
-
 import React, { ReactElement } from 'react';
 
-import DashboardPage from '@admin/dashboard/page';
+import LoginPage from '@admin/auth/pages/LoginPage';
 
-export default function Home(): ReactElement {
-  return <DashboardPage />;
+function AdminAuth(): ReactElement {
+  return <LoginPage />;
 }
+
+export default AdminAuth;

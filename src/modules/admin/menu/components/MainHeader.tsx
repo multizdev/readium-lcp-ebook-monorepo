@@ -10,8 +10,12 @@ import {
 import { IoIosLogOut } from 'react-icons/io';
 
 import usePortalStore from '@admin/common/store/usePortalStore';
+import useAuth from '@admin/auth/hooks/useAuth';
+import { Loader2 } from 'lucide-react';
 
 function MainHeader(): ReactElement {
+  const { logout, loading } = useAuth();
+
   const { mainMenuCollapsed, setMainMenuCollapsed } = usePortalStore();
 
   return (
@@ -26,14 +30,11 @@ function MainHeader(): ReactElement {
       <div className="h-full flex items-center gap-6">
         <div className="h-full flex items-center gap-2">
           <Avatar size="large" icon={<UserOutlined />} />
-          <span>User Name</span>
+          <span>Admin</span>
         </div>
-        <Button
-          type="primary"
-          size="large"
-          onClick={() => setMainMenuCollapsed(!mainMenuCollapsed)}
-        >
-          <IoIosLogOut size={20} />
+        <Button type="primary" size="large" onClick={logout} disabled={loading}>
+          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {!loading && <IoIosLogOut size={20} />}
         </Button>
       </div>
     </div>
