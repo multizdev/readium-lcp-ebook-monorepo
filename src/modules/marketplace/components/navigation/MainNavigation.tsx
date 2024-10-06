@@ -15,8 +15,6 @@ import {
   Book,
   Loader2,
 } from 'lucide-react';
-import { user } from '@prisma/client';
-import axios, { AxiosResponse } from 'axios';
 
 import { Input } from '@shadcn/components/ui/input';
 import { Button } from '@shadcn/components/ui/button';
@@ -38,27 +36,14 @@ function MainNavigation({ content }: { content: ReactElement }) {
   const pathName = usePathname();
   const { replace, push } = useRouter();
 
-  const { logout, loading } = useAuth();
+  const { fetchSession, logout, loading } = useAuth();
 
-  const { user, setUser } = useUserStore();
+  const { user } = useUserStore();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   useEffect(() => {
-    const fetchSession = async () => {
-      try {
-        const { data }: AxiosResponse<user> =
-          await axios.get('/api/user/session');
-
-        console.log('USER', user);
-
-        setUser(data);
-      } catch (error) {
-        setUser(null);
-      }
-    };
-
     (async () => fetchSession())();
   }, []);
 
