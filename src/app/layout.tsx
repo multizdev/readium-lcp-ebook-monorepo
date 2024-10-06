@@ -9,6 +9,7 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { SWRConfig } from 'swr';
 
 import '@/app/globals.css';
+import MainNavigation from '@marketplace/components/navigation/MainNavigation';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -39,7 +40,8 @@ export default function RootLayout({
                 fetch(resource, init).then((res) => res.json()),
             }}
           >
-            {children}
+            <MainNavigation content={children} />
+            {/*children*/}
           </SWRConfig>
         </AntdRegistry>
       </body>

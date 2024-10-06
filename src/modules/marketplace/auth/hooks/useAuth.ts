@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
+import { user } from '@prisma/client';
 
 import axios, { AxiosResponse } from 'axios';
 import { message } from 'antd';
+import useUserStore from '@marketplace/stores/useUserStore';
 
 interface AuthFormState {
   firstName?: string;
@@ -26,7 +28,9 @@ function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { replace, refresh } = useRouter();
+  const { replace } = useRouter();
+
+  const { user, setUser } = useUserStore();
 
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,6 +42,19 @@ function useAuth() {
     setSignupForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const fetchSession = async () => {
+    try {
+      const { data }: AxiosResponse<user> =
+        await axios.get('/api/user/session');
+
+      console.log('USER', user);
+
+      setUser(data);
+    } catch (error) {
+      setUser(null);
+    }
+  };
+
   const logout = async () => {
     setLoading(true);
     try {
@@ -47,7 +64,8 @@ function useAuth() {
       );
 
       await message.success(data.message);
-      refresh();
+      await fetchSession();
+      replace('/');
     } catch (error) {
       if (error instanceof Error) {
         // handle error (e.g., display error message)
@@ -69,6 +87,7 @@ function useAuth() {
       });
 
       await message.success(response.data.message);
+      await fetchSession();
       replace('/');
     } catch (err) {
       setError('Login failed. Please check your credentials and try again.');
@@ -104,6 +123,7 @@ function useAuth() {
     error,
     handleLoginChange,
     handleSignupChange,
+    fetchSession,
     login,
     signup,
     logout,
