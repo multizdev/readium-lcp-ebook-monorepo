@@ -26,7 +26,7 @@ function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { replace, refresh } = useRouter();
+  const { replace } = useRouter();
 
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -47,7 +47,7 @@ function useAuth() {
       );
 
       await message.success(data.message);
-      refresh();
+      replace('/');
     } catch (error) {
       if (error instanceof Error) {
         // handle error (e.g., display error message)

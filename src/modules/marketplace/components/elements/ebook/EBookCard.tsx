@@ -1,8 +1,9 @@
 import React, { ReactElement } from 'react';
 
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
-import { ShoppingCart } from 'lucide-react';
+import { PackageOpen, ShoppingCart } from 'lucide-react';
 import { metadata } from '@prisma/client';
 
 import {
@@ -16,10 +17,38 @@ import { Button } from '@shadcn/components/ui/button';
 
 import useCartStore from '@marketplace/stores/useCartStore';
 
-function EBookCard({ book }: { book: metadata }): ReactElement {
-  const { id, title, authors, categories, price, discount, content_id } = book;
-
+function FinalFooter({ book }: { book: metadata }): ReactElement {
+  const pathName = usePathname();
   const { cart, setCart } = useCartStore();
+
+  const { price, discount } = book;
+
+  if (pathName.includes('/mybooks'))
+    return (
+      <CardFooter className="mt-auto flex justify-between items-center">
+        <Button onClick={() => setCart([...cart, book])}>
+          <PackageOpen className="mr-2 h-4 w-4" /> Open Book
+        </Button>
+      </CardFooter>
+    );
+
+  return (
+    <CardFooter className="mt-auto flex justify-between items-center">
+      <div className="flex items-center gap-2">
+        <span className="text-lg font-bold">
+          $ {(price - discount).toFixed(2)}
+        </span>
+        <span className="line-through">${price.toFixed(2)}</span>
+      </div>
+      <Button onClick={() => setCart([...cart, book])}>
+        <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+      </Button>
+    </CardFooter>
+  );
+}
+
+function EBookCard({ book }: { book: metadata }): ReactElement {
+  const { id, title, authors, categories, content_id } = book;
 
   return (
     <Card key={id} className="flex flex-col">
@@ -43,17 +72,7 @@ function EBookCard({ book }: { book: metadata }): ReactElement {
         <p className="text-sm text-muted-foreground">By {authors[0]}</p>
         <p className="text-sm text-muted-foreground">Genre: {categories[0]}</p>
       </CardContent>
-      <CardFooter className="mt-auto flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <span className="text-lg font-bold">
-            $ {(price - discount).toFixed(2)}
-          </span>
-          <span className="line-through">${price.toFixed(2)}</span>
-        </div>
-        <Button onClick={() => setCart([...cart, book])}>
-          <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
-        </Button>
-      </CardFooter>
+      <FinalFooter book={book} />
     </Card>
   );
 }
