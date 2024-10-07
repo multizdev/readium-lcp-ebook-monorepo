@@ -2,7 +2,9 @@
 /.env
 /.idea
 
+
 # dependencies
+/readium-ts-toolkit
 /node_modules
 /.pnp
 .pnp.js
