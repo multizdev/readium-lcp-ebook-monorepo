@@ -19,7 +19,6 @@
     ],
     "paths": {
       "@root/*": ["./*"],
-      "@readium-toolkit/*": ["./readium-ts-toolkit/*"],
       "@shadcn/*": ["./src/shadcn/*"],
       "@/*": ["./src/*"],
       "@modules/*": ["./src/modules/*"],
