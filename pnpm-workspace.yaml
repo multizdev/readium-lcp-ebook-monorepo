@@ -1,0 +1,4 @@
+packages:
+  - 'readium-ts-toolkit/shared'
+  - 'readium-ts-toolkit/navigator'
+  - 'readium-ts-toolkit/navigator-html-injectables'

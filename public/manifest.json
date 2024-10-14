@@ -1,0 +1,28 @@
+{
+  "@context": "https://readium.org/webpub-manifest/context.jsonld",
+  "metadata": {
+    "@type": "http://schema.org/Book",
+    "title": "Your Book Titles",
+    "identifier": "urn:uuid:5c86d480-5510-4232-a644-9ebc9b044d8c",
+    "author": "Author Name",
+    "language": "en",
+    "modified": "2024-09-29T17:00:00Z"
+  },
+  "links": [
+    {
+      "rel": "self",
+      "href": "http://localhost:3000/manifest.json",
+      "type": "application/webpub+json"
+    }
+  ],
+  "readingOrder": [
+    {
+      "href": "http://localhost:8989/contents/5c86d480-5510-4232-a644-9ebc9b044d8c",
+      "type": "application/epub+zip",
+      "title": "Encrypted EPUB File",
+      "locations": {
+        "position": 1
+      }
+    }
+  ]
+}

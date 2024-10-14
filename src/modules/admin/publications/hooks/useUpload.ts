@@ -29,6 +29,8 @@ function useUpload() {
 
       setMetaDataForm(data.contentId);
 
+      console.log('UPLOAD DATA', data);
+
       if (onSuccess) onSuccess(data);
       message.success(`Customer Request file uploaded successfully.`);
       await getAllPublications();

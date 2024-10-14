@@ -1,17 +1,10 @@
 import { join } from 'node:path';
-import {
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  promises as fsPromises,
-} from 'node:fs';
+import { existsSync, mkdirSync, promises as fsPromises } from 'node:fs';
 
 import { NextRequest, NextResponse } from 'next/server';
 
-import crypto from 'crypto';
-import { v4 as uuidv4 } from 'uuid';
-
-import { generateSha256, saveFile, storeEncryptedContent } from '@/server/util';
+import { saveFile } from '@/server/util';
+import { encryptAndStore } from '@/server/readium/encrypt';
 
 // Ensure that the uploads directory exists
 function ensureUploadsDirectory(): string {
@@ -61,32 +54,12 @@ export async function POST(req: NextRequest): Promise<Response | undefined> {
     // Ensure the file is fully written and accessible using fs.stat instead of fs.access
     await fsPromises.stat(filePath);
 
-    // Read file content and generate SHA-256
-    const fileBuffer = readFileSync(filePath);
-    const sha256Hash = generateSha256(fileBuffer);
+    const response = await encryptAndStore(filePath);
 
-    // Set content ID, encryption key, provider, and rights
-    const contentId = uuidv4(); // You should generate this dynamically
-    const encryptionKey = crypto.randomBytes(32).toString('hex'); // Replace with the actual encryption key
+    // Delete the temporarily uploaded file
+    await fsPromises.unlink(filePath);
 
-    // Store the encrypted content on LCP server
-    const lcpResponse = await storeEncryptedContent(
-      contentId,
-      filePath,
-      sha256Hash,
-      encryptionKey,
-    );
-
-    if (lcpResponse.status !== 201 && lcpResponse.status !== 200) {
-      throw new Error('Failed to store encrypted content on LCP server');
-    }
-
-    // Return success response
-    return NextResponse.json({
-      message: 'File uploaded, stored, and license generated successfully',
-      content: lcpResponse.data,
-      contentId,
-    });
+    return response;
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
