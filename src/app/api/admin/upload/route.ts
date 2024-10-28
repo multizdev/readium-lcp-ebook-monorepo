@@ -42,7 +42,12 @@ export async function POST(req: NextRequest): Promise<Response | undefined> {
     // Prepare file path and save the file
     // const filePath = join(process.cwd(), 'public/uploads', file.name.trim());
     const filePath = join(uploadsDir, file.name.trim());
+
+    console.log('FILEPATH', filePath);
+
     const saved = await saveFile(file, filePath.trim());
+
+    console.log('SAVED', saved);
 
     if (!saved) {
       return NextResponse.json(
@@ -52,15 +57,20 @@ export async function POST(req: NextRequest): Promise<Response | undefined> {
     }
 
     // Ensure the file is fully written and accessible using fs.stat instead of fs.access
-    await fsPromises.stat(filePath);
+    const stats = await fsPromises.stat(filePath);
+
+    console.log('STATS', stats);
 
     const response = await encryptAndStore(filePath);
 
+    console.log('RESP', response);
+
     // Delete the temporarily uploaded file
-    await fsPromises.unlink(filePath);
+    // await fsPromises.unlink(filePath);
 
     return response;
   } catch (error) {
+    console.log('Error', error);
     if (error instanceof Error) {
       return NextResponse.json(
         { error: `File upload or publish failed: ${error}` },

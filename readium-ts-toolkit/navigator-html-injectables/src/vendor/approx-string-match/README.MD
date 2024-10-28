@@ -1,1 +1,0 @@
-From https://github.com/robertknight/approx-string-match-js/tree/master

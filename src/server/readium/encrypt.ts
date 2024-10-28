@@ -22,8 +22,10 @@ async function convertPdfToEpub(tempFilePath: string): Promise<string> {
   });
 }
 
-async function encryptAndStore(tempFilePath: string): Promise<Response> {
-  const finalFilePath = await convertPdfToEpub(tempFilePath);
+async function encryptAndStore(finalFilePath: string): Promise<Response> {
+  // const finalFilePath = await convertPdfToEpub(tempFilePath);
+
+  console.log('finalFIlePath', finalFilePath);
 
   const contentId = uuidv4();
   const storagePath = 'D:\\MultiDev\\EReader\\readium\\storage'; // Adjust to your storage path
@@ -32,10 +34,12 @@ async function encryptAndStore(tempFilePath: string): Promise<Response> {
   const lcp_user = process.env.LCP_USERNAME || '';
   const lcp_pass = process.env.LCP_PASSWORD || '';
 
-  const lcpencryptCommand = `lcpencrypt -input "${finalFilePath.replaceAll(' ', '').trim()}" -storage ${storagePath} -url ${publicUrl} -contentid ${contentId} -lcpsv http://${lcp_user}:${lcp_pass}@localhost:8989 -verbose`;
+  const lcpencryptCommand = `lcpencrypt -input "${finalFilePath.replaceAll(' ', '').trim()}" -url ${publicUrl} -contentid ${contentId} -lcpsv http://${lcp_user}:${lcp_pass}@localhost:8989 -verbose`;
 
   return new Promise((resolve) => {
     exec(lcpencryptCommand, async (error, stdout, stderr) => {
+      console.log('PROBLEM', error, stdout, stderr);
+
       if (error) {
         return resolve(
           NextResponse.json(

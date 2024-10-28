@@ -29,17 +29,18 @@ export async function POST(req: NextRequest): Promise<Response | undefined> {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const { id, email, name, password_hash } = user;
+    const { id, email, name } = user;
 
     // User information for license generation
     const userInfo = {
       id,
       email,
       hint: name,
-      passphraseHash: generateSha256(password_hash), // Use SHA-256 hashed passphrase
+      passphraseHash: generateSha256('123456'), // Use SHA-256 hashed passphrase
     };
 
-    const provider = process.env.PROVIDER || ''; // Replace with your provider
+    // const provider = process.env.PROVIDER || ''; // Replace with your provider
+    const provider = 'http://192.168.18.109:3000';
 
     // Rights information for the license
     const rights = {
@@ -60,6 +61,10 @@ export async function POST(req: NextRequest): Promise<Response | undefined> {
     if (licenseResponse.status !== 201) {
       throw new Error('Failed to generate license');
     }
+
+    console.log('User', userInfo);
+
+    console.log('License', licenseResponse.data);
 
     return NextResponse.json({
       license: {
