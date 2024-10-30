@@ -11,11 +11,21 @@ const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest): Promise<Response | undefined> {
   const { content_id }: { content_id: string } = await req.json();
-  const token = req.cookies.get('userSessionId')?.value;
+  let token: string | undefined | null =
+    req.cookies.get('userSessionId')?.value;
+
+  // If token is not in cookies, try to retrieve it from the Authorization header
+  if (!token) {
+    const authHeader = req.headers.get('Authorization');
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.substring(7); // Remove "Bearer " prefix
+    }
+  }
 
   if (!token) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
     const userId = payload.id as string;

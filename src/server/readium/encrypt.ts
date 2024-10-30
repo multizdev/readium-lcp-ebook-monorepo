@@ -22,13 +22,17 @@ async function convertPdfToEpub(tempFilePath: string): Promise<string> {
   });
 }
 
-async function encryptAndStore(finalFilePath: string): Promise<Response> {
-  // const finalFilePath = await convertPdfToEpub(tempFilePath);
+async function encryptAndStore(tempFilePath: string): Promise<Response> {
+  let finalFilePath = tempFilePath;
 
-  console.log('finalFIlePath', finalFilePath);
+  if (!tempFilePath.includes('epub')) {
+    finalFilePath = await convertPdfToEpub(tempFilePath);
+  }
+
+  // console.log('finalFIlePath', finalFilePath);
 
   const contentId = uuidv4();
-  const storagePath = 'D:\\MultiDev\\EReader\\readium\\storage'; // Adjust to your storage path
+  // const storagePath = 'D:\\MultiDev\\EReader\\readium\\storage'; // Adjust to your storage path
   const publicUrl = 'http://localhost:8989'; // Public URL where encrypted files are accessible
 
   const lcp_user = process.env.LCP_USERNAME || '';
