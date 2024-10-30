@@ -29,7 +29,10 @@ function CartAction() {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const total = cart.reduce((acc, item) => acc + item.price, 0);
+  const total = cart.reduce(
+    (acc, item) => acc + (item.price - item.discount),
+    0,
+  );
 
   const removeFromCart = (id: number) => {
     setCart(cart.filter((item) => item.id !== id));
@@ -96,7 +99,7 @@ function CartAction() {
                     <div className="grid gap-1">
                       <span className="font-medium">{item.title}</span>
                       <span className="text-sm text-muted-foreground">
-                        ${item.price}
+                        ${item.price - item.discount}
                       </span>
                     </div>
                   </div>
