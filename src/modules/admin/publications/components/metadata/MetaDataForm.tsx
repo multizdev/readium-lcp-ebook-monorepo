@@ -62,11 +62,47 @@ function MetaDataForm(): ReactElement {
         </Form.Item>
         <Form.Item
           className="max-w-[400px]"
+          label="Publisher"
+          name="publisher"
+          rules={[{ required: true, message: 'Please input the publisher!' }]}
+        >
+          <Input placeholder="Publisher" />
+        </Form.Item>
+        <Form.Item
+          className="max-w-[400px]"
           label="Categories"
           name="categories"
           rules={[{ required: true, message: 'Please input the categories!' }]}
         >
           <Select mode="tags" placeholder="Categories" />
+        </Form.Item>
+        <Form.Item
+          className="max-w-[400px]"
+          label="Publication Place"
+          name="publication_place"
+          rules={[
+            { required: true, message: 'Please input the publication place!' },
+          ]}
+        >
+          <Input placeholder="Publication Place" />
+        </Form.Item>
+        <Form.Item
+          className="max-w-[400px]"
+          label="What's it about?"
+          name="what_its_about"
+          rules={[
+            { required: true, message: 'Please input what it is about!' },
+          ]}
+        >
+          <Input placeholder="What's it about?" />
+        </Form.Item>
+        <Form.Item
+          className="max-w-[400px]"
+          label="Who is it for?"
+          name="who_it_for"
+          rules={[{ required: true, message: 'Please input who it is for!' }]}
+        >
+          <Input placeholder="Who is it for?" />
         </Form.Item>
         <Form.Item
           className="max-w-[400px]"

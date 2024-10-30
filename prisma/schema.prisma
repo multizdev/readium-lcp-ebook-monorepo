@@ -85,14 +85,19 @@ model license_status {
 }
 
 model metadata {
-  id         Int      @id @default(autoincrement())
-  content_id String   @db.VarChar(255)
-  title      String   @db.VarChar(255)
-  authors    String[]
-  categories String[]
-  price      Float
-  discount   Float
-  content    content  @relation(fields: [content_id], references: [id], onDelete: Cascade)
+  id                Int      @id @default(autoincrement())
+  content_id        String   @db.VarChar(255)
+  title             String   @db.VarChar(255)
+  authors           String[]
+  publisher         String   @default("None")
+  categories        String[]
+  price             Float
+  discount          Float
+  publication_date  DateTime @default(now())
+  publication_place String   @default("Country")
+  what_its_about    String   @default("What's it about?")
+  who_it_for        String   @default("Who is it for?")
+  content           content  @relation(fields: [content_id], references: [id], onDelete: Cascade)
 
   @@index([content_id], map: "content_id_index")
 }

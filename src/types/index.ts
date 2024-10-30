@@ -4,4 +4,8 @@ type ContentWithMetadata = Prisma.contentGetPayload<{
   include: { metadata: true };
 }>;
 
-export type { ContentWithMetadata };
+type Publication = Prisma.licenseGetPayload<{
+  include: { content: { select: { metadata: true } } };
+}>;
+
+export type { ContentWithMetadata, Publication };
