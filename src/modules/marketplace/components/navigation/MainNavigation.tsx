@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Book,
   Loader2,
+  LogOutIcon,
 } from 'lucide-react';
 
 import { Input } from '@shadcn/components/ui/input';
@@ -166,16 +167,54 @@ function MainNavigation({ content }: { content: ReactElement }) {
                             placeholder="Search for books..."
                           />
                         </div>
-                        <nav className="flex flex-col space-y-2">
-                          <Button variant="ghost" className="justify-start">
-                            <ShoppingCart className="mr-2 h-4 w-4" />
-                            Cart
-                          </Button>
-                          <Button variant="ghost" className="justify-start">
-                            <User className="mr-2 h-4 w-4" />
-                            Account
-                          </Button>
-                        </nav>
+                        {!user && (
+                          <>
+                            <Button
+                              variant="ghost"
+                              className="justify-start"
+                              onClick={() => replace('/user/login')}
+                            >
+                              Log In
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              className="justify-start"
+                              onClick={() => replace('/user/register')}
+                            >
+                              Register
+                            </Button>
+                          </>
+                        )}
+                        {user && (
+                          <nav className="flex flex-col space-y-2">
+                            <Button
+                              variant="ghost"
+                              className="justify-start"
+                              onClick={() => push('/')}
+                            >
+                              <User className="mr-2 h-4 w-4" />
+                              Home
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              className="justify-start"
+                              onClick={() => push('/mybooks')}
+                            >
+                              <ShoppingCart className="mr-2 h-4 w-4" />
+                              My Books
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              className="justify-start"
+                              onClick={async () => {
+                                await logout();
+                              }}
+                            >
+                              <LogOutIcon className="mr-2 h-4 w-4" />
+                              Logout
+                            </Button>
+                          </nav>
+                        )}
                         <div className="mt-auto">
                           <h3 className="font-semibold mb-2">Categories</h3>
                           <nav className="flex flex-col space-y-1">
