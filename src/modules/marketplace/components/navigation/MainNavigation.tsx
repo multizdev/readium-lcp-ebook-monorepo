@@ -39,7 +39,12 @@ function MainNavigation({ content }: { content: ReactElement }) {
 
   const { fetchSession, logout, loading } = useAuth();
 
-  const { user } = useUserStore();
+  const {
+    user,
+    categories: allCat,
+    setSelectedCategory,
+    setSearchQuery,
+  } = useUserStore();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -48,18 +53,7 @@ function MainNavigation({ content }: { content: ReactElement }) {
     (async () => fetchSession())();
   }, []);
 
-  const categories = [
-    'Fiction',
-    'Non-Fiction',
-    'Science Fiction',
-    'Mystery',
-    'Romance',
-    'Biography',
-    'Self-Help',
-    'Business',
-    'Cookbooks',
-    "Children's Books",
-  ];
+  const categories = [...allCat];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -82,8 +76,11 @@ function MainNavigation({ content }: { content: ReactElement }) {
                   <div className="relative">
                     <Input
                       type="search"
-                      placeholder="Search for books..."
+                      placeholder="Search Title, Authors or Publishers..."
                       className="w-full pl-10"
+                      onChange={(val) => {
+                        setSearchQuery(val.target.value);
+                      }}
                     />
                     <Search
                       className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -268,11 +265,14 @@ function MainNavigation({ content }: { content: ReactElement }) {
                 <div className="p-4 pt-0">
                   <h2 className="text-lg font-semibold mb-4">Categories</h2>
                   <nav className="space-y-2">
-                    {categories.map((category) => (
+                    {['All', ...categories].map((category) => (
                       <Link
                         key={category}
-                        href={`#${category.toLowerCase().replace(' ', '-')}`}
+                        href="#"
                         className="block hover:bg-gray-200 px-2 py-1 rounded"
+                        onClick={() => {
+                          setSelectedCategory(category);
+                        }}
                       >
                         {category}
                       </Link>

@@ -83,6 +83,7 @@ export async function POST(req: NextRequest): Promise<Response | undefined> {
       content_id,
     });
   } catch (error) {
+    console.log('Error', error);
     if (error instanceof Error) {
       return NextResponse.json(
         { error: `License generation failed: ${error}` },

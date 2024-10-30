@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { ReactElement, useEffect, useMemo } from 'react';
 import { Loader2 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
@@ -11,12 +11,36 @@ import MainFilter from '@marketplace/components/elements/filters/MainFilter';
 import EBookCard from '@marketplace/components/elements/ebook/EBookCard';
 import useUserStore from '@marketplace/stores/useUserStore';
 
-function MainContent({ url }: { url: string }) {
+function MainContent({ url }: { url: string }): ReactElement {
   const pathName = usePathname();
 
-  const { user } = useUserStore();
+  const { user, selectedCategory, searchQuery, setCategories } = useUserStore();
 
   const { data: books, isLoading }: SWRResponse<metadata[]> = useSWR(url);
+
+  useEffect(() => {
+    if (books) {
+      const categories = Array.from(
+        new Set(books.map((book) => book.categories[0])),
+      );
+      setCategories(categories);
+    }
+  }, [books]);
+
+  const filteredBooks: metadata[] | undefined = useMemo(() => {
+    let filtered = books;
+    if (selectedCategory !== 'All') {
+      filtered = books?.filter((book) =>
+        book.categories.includes(selectedCategory),
+      );
+    }
+    if (searchQuery) {
+      filtered = filtered?.filter((book) =>
+        book.title.toLowerCase().includes(searchQuery.toLowerCase()),
+      );
+    }
+    return filtered;
+  }, [selectedCategory, searchQuery, books]);
 
   return (
     <>
@@ -48,9 +72,8 @@ function MainContent({ url }: { url: string }) {
               <section className="container mx-auto px-4 py-8">
                 <MainFilter />
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {books &&
-                    books.map &&
-                    books?.map((book: metadata) => {
+                  {filteredBooks &&
+                    filteredBooks.map((book: metadata) => {
                       if (book) return <EBookCard key={book.id} book={book} />;
                     })}
                 </div>
