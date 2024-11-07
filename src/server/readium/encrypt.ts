@@ -33,7 +33,7 @@ async function encryptAndStore(tempFilePath: string): Promise<Response> {
 
   const contentId = uuidv4();
   // const storagePath = 'D:\\MultiDev\\EReader\\readium\\storage'; // Adjust to your storage path
-  const publicUrl = 'http://localhost:8989'; // Public URL where encrypted files are accessible
+  const publicUrl = `${process.env.LCP_HOST}:8989`; // Public URL where encrypted files are accessible
 
   const lcp_user = process.env.LCP_USERNAME || '';
   const lcp_pass = process.env.LCP_PASSWORD || '';

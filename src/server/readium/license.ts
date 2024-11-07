@@ -35,7 +35,7 @@ async function generateLicense(
     },
   };
 
-  const licenseUrl = `http://localhost:8989/contents/${contentId}/license`;
+  const licenseUrl = `${process.env.LCP_HOST}:8989/contents/${contentId}/license`;
   return await axios.post(licenseUrl, licensePayload, {
     auth: {
       username: process.env.LCP_USERNAME || 'lcp-user',

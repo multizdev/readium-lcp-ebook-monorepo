@@ -39,7 +39,7 @@ export async function GET(
   if (user) {
     const hex_value = generateSha256('123456');
 
-    const licenseUrl = `http://localhost:8989/licenses/${licenseId}`;
+    const licenseUrl = `${process.env.LCP_HOST}:8989/licenses/${licenseId}`;
 
     const licensePayload = {
       user: {

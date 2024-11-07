@@ -70,7 +70,7 @@ async function storeEncryptedContent(
     'protected-content-disposition': filePath.split('/').pop(),
   };
 
-  const lcpServerUrl = `http://localhost:8989/contents/${contentId}`;
+  const lcpServerUrl = `${process.env.LCP_HOST}:8989/contents/${contentId}`;
   return await axios.put(lcpServerUrl, payload, {
     auth: {
       username: 'lcp-user',
