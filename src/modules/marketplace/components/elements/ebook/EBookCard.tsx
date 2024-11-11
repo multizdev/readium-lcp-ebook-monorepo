@@ -52,12 +52,9 @@ function EBookCard({ book }: { book: metadata }): ReactElement {
 
   const imageURL = `${process.env.NEXT_PUBLIC_IMAGE_HOST}/publications/cover-images/${content_id}.png`;
 
-  console.log('Image URL', imageURL);
-
   return (
     <Card key={id} className="flex flex-col">
       <CardHeader>
-        <div>${process.env.NEXT_PUBLIC_IMAGE_HOST}</div>
         <div className="aspect-[3/4] relative mb-4">
           <Image
             src={imageURL}
