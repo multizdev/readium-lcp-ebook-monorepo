@@ -16,7 +16,24 @@ function MainContent({ url }: { url: string }): ReactElement {
 
   const { user, selectedCategory, searchQuery, setCategories } = useUserStore();
 
-  const { data: books, isLoading }: SWRResponse<metadata[]> = useSWR(url);
+  async function fetcher(url: string) {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store', // Ensures no caching on client
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
+    }
+    return response.json();
+  }
+
+  const { data: books, isLoading }: SWRResponse<metadata[]> = useSWR(
+    url,
+    fetcher,
+  );
 
   useEffect(() => {
     if (books) {
