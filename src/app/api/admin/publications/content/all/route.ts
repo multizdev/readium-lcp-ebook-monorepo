@@ -16,5 +16,7 @@ export async function GET(): Promise<NextResponse> {
     },
   });
 
+  console.log('all Content', allContent);
+
   return NextResponse.json(allContent);
 }
