@@ -25,7 +25,7 @@ function FinalFooter({ book }: { book: metadata }): ReactElement {
 
   if (pathName.includes('/mybooks'))
     return (
-      <CardFooter className="mt-auto flex justify-between items-center">
+      <CardFooter className="mt-auto flex flex-col lg:flex-row justify-between items-center">
         <Button onClick={() => setCart([...cart, book])}>
           <PackageOpen className="mr-2 h-4 w-4" /> Open Book
         </Button>
@@ -33,10 +33,10 @@ function FinalFooter({ book }: { book: metadata }): ReactElement {
     );
 
   return (
-    <CardFooter className="mt-auto flex justify-between items-center">
-      <div className="flex items-center gap-2">
+    <CardFooter className="mt-auto flex flex-col lg:flex-row justify-between items-center gap-2">
+      <div className="flex flex-col items-center">
         <span className="text-lg font-bold">
-          $ {(price - discount).toFixed(2)}
+          ${(price - discount).toFixed(2)}
         </span>
         <span className="line-through">${price.toFixed(2)}</span>
       </div>
