@@ -11,6 +11,7 @@
     "lsdserver-start": "lsdserver"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.5.1",
     "@ant-design/nextjs-registry": "^1.0.1",
     "@d-i-t-a/reader": "^2.4.10",
     "@material/web": "^2.2.0",

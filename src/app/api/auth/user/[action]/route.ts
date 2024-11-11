@@ -105,6 +105,6 @@ export async function POST(
   return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
 }
 
-export const config = {
+/*export const config = {
   matcher: ['/api/[action]/user/:action*'],
-};
+};*/
