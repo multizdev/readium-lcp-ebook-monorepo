@@ -55,7 +55,7 @@ function EBookCard({ book }: { book: metadata }): ReactElement {
       <CardHeader>
         <div className="aspect-[3/4] relative mb-4">
           <Image
-            src={`/publications/cover-images/${content_id}.png`}
+            src={`${process.env.NEXT_PUBLIC_IMAGE_HOST}/publications/cover-images/${content_id}.png`}
             alt={title}
             layout="fill"
             objectFit="cover"

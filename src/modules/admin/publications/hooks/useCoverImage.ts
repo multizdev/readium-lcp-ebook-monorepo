@@ -15,10 +15,12 @@ function useCoverImage(item: ContentWithMetadata) {
   const checkCoverImage = async () => {
     try {
       const response = await axios.get(
-        `/publications/cover-images/${item.id}.png`,
+        `${process.env.NEXT_PUBLIC_IMAGE_HOST}/publications/cover-images/${item.id}.png`,
       );
       if (response.status === 200) {
-        setCoverImageUrl(`/publications/cover-images/${item.id}.png`);
+        setCoverImageUrl(
+          `${process.env.NEXT_PUBLIC_IMAGE_HOST}/publications/cover-images/${item.id}.png`,
+        );
       }
     } catch (error) {
       // If the image does not exist, proceed with showing the upload component
