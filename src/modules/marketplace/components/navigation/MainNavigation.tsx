@@ -60,7 +60,7 @@ function MainNavigation({ content }: { content: ReactElement }) {
       {!pathName.includes('user') && !pathName.includes('admin') && (
         <>
           {/* Top Navigation Bar */}
-          <header className="fixed w-full bg-white border-b">
+          <header className="fixed z-50 w-full bg-white border-b">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex items-center justify-between h-16">
                 {/* Logo */}
