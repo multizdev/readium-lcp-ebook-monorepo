@@ -86,7 +86,7 @@ function CartAction() {
                 >
                   <div className="flex items-center gap-2">
                     <Image
-                      src={`/publications/cover-images/${item.content_id}.png`}
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_HOST}/publications/cover-images/${item.content_id}.png`}
                       alt={item.title}
                       width={40}
                       height={40}
