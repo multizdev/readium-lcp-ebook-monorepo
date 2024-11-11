@@ -50,13 +50,17 @@ function FinalFooter({ book }: { book: metadata }): ReactElement {
 function EBookCard({ book }: { book: metadata }): ReactElement {
   const { id, title, authors, categories, content_id } = book;
 
+  const imageURL = `${process.env.NEXT_PUBLIC_IMAGE_HOST}/publications/cover-images/${content_id}.png`;
+
+  console.log('Image URL', imageURL);
+
   return (
     <Card key={id} className="flex flex-col">
       <CardHeader>
-        <div>{process.env.NEXT_PUBLIC_IMAGE_HOST}</div>
+        <div>${process.env.NEXT_PUBLIC_IMAGE_HOST}</div>
         <div className="aspect-[3/4] relative mb-4">
           <Image
-            src={`http://34.136.74.243/uploads/book.png`}
+            src={imageURL}
             alt={title}
             layout="fill"
             objectFit="cover"
