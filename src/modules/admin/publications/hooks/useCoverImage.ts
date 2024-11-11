@@ -17,6 +17,9 @@ function useCoverImage(item: ContentWithMetadata) {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_IMAGE_HOST}/publications/cover-images/${item.id}.png`,
       );
+
+      console.log('response', response);
+
       if (response.status === 200) {
         setCoverImageUrl(
           `${process.env.NEXT_PUBLIC_IMAGE_HOST}/publications/cover-images/${item.id}.png`,
