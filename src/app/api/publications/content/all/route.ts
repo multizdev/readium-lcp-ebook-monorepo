@@ -12,5 +12,8 @@ export async function GET(): Promise<NextResponse> {
   const prisma = new PrismaClient();
   const metadata: metadata[] = await prisma.metadata.findMany();
 
-  return NextResponse.json(metadata);
+  const response = NextResponse.json(metadata);
+  response.headers.set('Cache-Control', 'no-store, max-age=0');
+
+  return response;
 }
