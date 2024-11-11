@@ -11,7 +11,7 @@ function usePublication() {
 
   const getAllPublications = async () => {
     setLoading(true);
-    const { data }: AxiosResponse<ContentWithMetadata[]> = await axios.get(
+    const { data }: AxiosResponse<ContentWithMetadata[]> = await axios.post(
       '/api/admin/publications/content/all',
       { withCredentials: true },
     );

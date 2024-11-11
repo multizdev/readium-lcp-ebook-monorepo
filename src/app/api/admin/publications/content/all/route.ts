@@ -8,7 +8,7 @@ BigInt.prototype.toJSON = function () {
   return int ?? this.toString();
 };
 
-export async function GET(): Promise<NextResponse> {
+export async function POST(): Promise<NextResponse> {
   const prisma = new PrismaClient();
   const allContent: content[] = await prisma.content.findMany({
     include: {
