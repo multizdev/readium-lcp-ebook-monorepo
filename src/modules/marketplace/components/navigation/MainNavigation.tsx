@@ -60,7 +60,7 @@ function MainNavigation({ content }: { content: ReactElement }) {
       {!pathName.includes('user') && !pathName.includes('admin') && (
         <>
           {/* Top Navigation Bar */}
-          <header className="w-full bg-white border-b">
+          <header className="fixed w-full bg-white border-b">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex items-center justify-between h-16">
                 {/* Logo */}
@@ -142,6 +142,10 @@ function MainNavigation({ content }: { content: ReactElement }) {
                       )}
                     </DropdownMenuContent>
                   </DropdownMenu>
+                </div>
+
+                <div className="flex lg:hidden">
+                  <CartAction />
                 </div>
 
                 {/* Mobile menu button */}
@@ -284,7 +288,7 @@ function MainNavigation({ content }: { content: ReactElement }) {
           </>
         )}
         {/* Main Content */}
-        <main className="flex-grow p-4">{content}</main>
+        <main className="flex-grow p-4 pt-[100px]">{content}</main>
       </div>
     </div>
   );
