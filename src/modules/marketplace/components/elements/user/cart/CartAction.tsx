@@ -23,9 +23,14 @@ import { Button } from '@shadcn/components/ui/button';
 import { Badge } from '@shadcn/components/ui/badge';
 
 import useCartStore from '@marketplace/stores/useCartStore';
+import useUserStore from '@marketplace/stores/useUserStore';
+import { useRouter } from 'next/navigation';
 
 function CartAction() {
+  const { replace } = useRouter();
+
   const { cart, setCart } = useCartStore();
+  const { user } = useUserStore();
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -39,18 +44,22 @@ function CartAction() {
   };
 
   const handleCheckout = async () => {
-    cart.map(async ({ content_id }: metadata) => {
-      setLoading(true);
-      const { data, status } = await axios.post('/api/user/purchase', {
-        content_id,
-      });
+    if (!user) {
+      replace('/user/login');
+    } else {
+      cart.map(async ({ content_id }: metadata) => {
+        setLoading(true);
+        const { data, status } = await axios.post('/api/user/purchase', {
+          content_id,
+        });
 
-      if (status === 200) {
-        setCart([]);
-        console.log(`Content ${content_id}: `, data);
-      }
-      setLoading(false);
-    });
+        if (status === 200) {
+          setCart([]);
+          console.log(`Content ${content_id}: `, data);
+        }
+        setLoading(false);
+      });
+    }
   };
 
   return (
