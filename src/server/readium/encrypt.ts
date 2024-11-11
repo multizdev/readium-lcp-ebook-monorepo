@@ -38,7 +38,7 @@ async function encryptAndStore(tempFilePath: string): Promise<Response> {
   const lcp_user = process.env.LCP_USERNAME || '';
   const lcp_pass = process.env.LCP_PASSWORD || '';
 
-  const lcpencryptCommand = `lcpencrypt -input "${finalFilePath.replaceAll(' ', '').trim()}" -url ${publicUrl} -contentid ${contentId} -lcpsv http://${lcp_user}:${lcp_pass}@localhost:8989 -verbose`;
+  const lcpencryptCommand = `lcpencrypt -input "${finalFilePath.replaceAll(' ', '').trim()}" -url ${publicUrl} -contentid ${contentId} -lcpsv http://${lcp_user}:${lcp_pass}@${process.env.LCP_HOSTNAME}:8989 -verbose`;
 
   return new Promise((resolve) => {
     exec(lcpencryptCommand, async (error, stdout, stderr) => {
