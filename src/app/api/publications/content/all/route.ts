@@ -14,3 +14,10 @@ export async function POST(): Promise<NextResponse> {
 
   return NextResponse.json(metadata);
 }
+
+export async function GET(): Promise<NextResponse> {
+  const prisma = new PrismaClient();
+  const metadata: metadata[] = await prisma.metadata.findMany();
+
+  return NextResponse.json(metadata);
+}
