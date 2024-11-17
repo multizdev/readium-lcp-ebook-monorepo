@@ -50,7 +50,7 @@ function FinalFooter({ book }: { book: metadata }): ReactElement {
 function EBookCard({ book }: { book: metadata }): ReactElement {
   const { id, title, authors, categories, content_id } = book;
 
-  const imageURL = `${process.env.NEXT_PUBLIC_IMAGE_HOST}/publications/cover-images/${content_id}.png`;
+  const imageURL = `${process.env.NEXT_PUBLIC_IMAGE_HOST}/publications/cover-images/${content_id}.png?timestamp=${new Date().getTime()}`;
 
   return (
     <Card key={id} className="flex flex-col">
