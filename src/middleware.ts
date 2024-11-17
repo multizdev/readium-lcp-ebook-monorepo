@@ -8,7 +8,7 @@ export async function middleware(req: NextRequest) {
     req.cookies.get('sessionId')?.value ||
     req.cookies.get('userSessionId')?.value;
 
-  // Check if the request is for '/admin'
+  // Handle '/admin' route specifically
   if (req.nextUrl.pathname === '/admin') {
     if (token) {
       try {
@@ -19,16 +19,16 @@ export async function middleware(req: NextRequest) {
           new URL('/admin/dashboard', req.nextUrl.origin),
         );
       } catch (error) {
-        // If token verification fails, redirect to home
+        // If token verification fails, redirect to '/'
         return NextResponse.redirect(new URL('/', req.nextUrl.origin));
       }
-    } else {
-      // If no token, redirect to home
-      return NextResponse.redirect(new URL('/', req.nextUrl.origin));
     }
+
+    // If no token, allow access to '/admin' (e.g., for login page)
+    return NextResponse.next();
   }
 
-  // For other paths, proceed with the token validation
+  // For other protected routes, validate token
   if (!token) {
     return NextResponse.redirect(new URL('/', req.nextUrl.origin));
   }
