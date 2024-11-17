@@ -30,7 +30,7 @@ function useAuth() {
 
   const { replace } = useRouter();
 
-  const { user, setUser } = useUserStore();
+  const { setUser } = useUserStore();
 
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -46,8 +46,6 @@ function useAuth() {
     try {
       const { data }: AxiosResponse<user> =
         await axios.get('/api/user/session');
-
-      console.log('USER', user);
 
       setUser(data);
     } catch (error) {
