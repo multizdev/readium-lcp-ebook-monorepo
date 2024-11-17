@@ -10,7 +10,13 @@ import { ContentWithMetadata } from '@/types';
 
 const { Dragger } = Upload;
 
-function UploadedFile({ item }: { item: ContentWithMetadata }): ReactElement {
+function UploadedFile({
+  item,
+  onScrollToTop,
+}: {
+  item: ContentWithMetadata;
+  onScrollToTop: () => void;
+}): ReactElement {
   const { metaDataFormInstance, setMetaDataForm } = usePublicationStore();
 
   return (
@@ -33,10 +39,10 @@ function UploadedFile({ item }: { item: ContentWithMetadata }): ReactElement {
                     metaDataFormInstance.setFieldsValue(item.metadata[0]);
                   }
                   if (!item.metadata[0]) {
-                    console.log('EMPTY');
                     setMetaDataForm(item.id);
                     metaDataFormInstance.resetFields();
                   }
+                  onScrollToTop(); // Scroll to top on button click
                 }
               }}
             />
@@ -63,7 +69,11 @@ function UploadedFile({ item }: { item: ContentWithMetadata }): ReactElement {
   );
 }
 
-function ContentUpload(): ReactElement {
+function ContentUpload({
+  onScrollToTop,
+}: {
+  onScrollToTop: () => void;
+}): ReactElement {
   const { contentFiles } = usePublicationStore();
   const { loading } = usePublication();
   const { props, uploading } = useUpload();
@@ -81,7 +91,9 @@ function ContentUpload(): ReactElement {
       bordered
       dataSource={contentFiles}
       pagination={{ pageSize: 50 }}
-      renderItem={(item) => <UploadedFile item={item} />}
+      renderItem={(item) => (
+        <UploadedFile item={item} onScrollToTop={onScrollToTop} />
+      )}
     />
   );
 }

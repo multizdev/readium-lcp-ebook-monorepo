@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useRef } from 'react';
 
 import { Divider } from 'antd';
 
@@ -9,8 +9,17 @@ import CoverImage from '@admin/publications/components/metadata/CoverImage';
 import IDList from '@admin/publications/components/metadata/IDList';
 
 function AddPublication(): ReactElement {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToTop = () => {
+    containerRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div className="w-full flex flex-col gap-8 p-4 lg:p-12 overflow-y-auto">
+    <div
+      ref={containerRef}
+      className="w-full flex flex-col gap-8 p-4 lg:p-12 overflow-y-auto"
+    >
       <div className="w-full">
         <span className="font-bold text-3xl">ADD PUBLICATIONS</span>
       </div>
@@ -24,7 +33,7 @@ function AddPublication(): ReactElement {
       </div>
       <Divider orientation="left">Upload Files</Divider>
       <div className="w-full flex flex-col lg:flex-row gap-4">
-        <ContentUpload />
+        <ContentUpload onScrollToTop={scrollToTop} />
         <CoverImage />
         <IDList />
       </div>
