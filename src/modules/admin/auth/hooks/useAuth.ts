@@ -27,7 +27,7 @@ function useAuth() {
         await message.error((error as any).response.data.error);
       }
     } finally {
-      replace('/');
+      replace('/admin');
       setLoading(false);
     }
   };
