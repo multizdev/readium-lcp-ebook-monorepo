@@ -54,6 +54,8 @@ export async function GET(
       },
     };
 
+    console.log('PAYLOAD', licensePayload);
+
     const response = await axios.post(licenseUrl, licensePayload, {
       auth: {
         username: process.env.LCP_USERNAME || 'lcp-user',
