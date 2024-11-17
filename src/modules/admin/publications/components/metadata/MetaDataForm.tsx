@@ -27,20 +27,27 @@ function MetaDataForm(): ReactElement {
         layout="vertical"
         onFinish={async (values) => {
           setSaving(true);
-          const { data } = await axios.post(
-            '/api/admin/publications/metadata/save',
-            {
+          try {
+            // Determine the API endpoint based on whether metaDataForm (content ID) exists
+            const url = metaDataForm
+              ? '/api/admin/publications/metadata/update' // Update if content ID exists
+              : '/api/admin/publications/metadata/save'; // Save if no content ID
+
+            const { data } = await axios.post(url, {
               values: {
                 ...values,
-                content_id: metaDataForm,
+                content_id: metaDataForm, // Pass content ID for update or save
               },
-            },
-          );
+            });
 
-          if (data) {
-            await getAllPublications();
+            if (data) {
+              await getAllPublications();
+              setSaving(false);
+              form.resetFields();
+            }
+          } catch (error) {
+            console.error('Error submitting metadata:', error);
             setSaving(false);
-            form.resetFields();
           }
         }}
       >
@@ -127,7 +134,7 @@ function MetaDataForm(): ReactElement {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={saving}>
-            Save
+            {metaDataForm ? 'Update' : 'Save'}
           </Button>
         </Form.Item>
       </Form>
