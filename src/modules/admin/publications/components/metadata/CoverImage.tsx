@@ -1,8 +1,6 @@
 import React, { ReactElement } from 'react';
 
-import Image from 'next/image';
-
-import { List, Upload } from 'antd';
+import { List, Upload, UploadFile } from 'antd';
 import ImgCrop from 'antd-img-crop';
 
 import usePublicationStore from '@admin/publications/store/usePublicationStore';
@@ -14,35 +12,43 @@ function FileContainer({ item }: { item: ContentWithMetadata }): ReactElement {
   const { fileList, customRequest, onChange, onPreview, coverImageUrl } =
     useCoverImage(item);
 
+  const fileName = item.location.split('\\').pop() || '';
+
+  // Define the formatted file list with the correct type
+  const formattedFileList: UploadFile[] = coverImageUrl
+    ? [
+        {
+          uid: '-1',
+          name: 'Cover Image',
+          status: 'done', // Ensure this matches the `UploadFileStatus` type
+          url: coverImageUrl,
+        } as UploadFile,
+      ]
+    : fileList;
+
   return (
     <List.Item>
       <div className="w-full flex justify-between items-center">
         <div className="flex items-center gap-2">
           <span className="font-bold">FileName:</span>
-          <span>{item.location.split('\\').pop()}</span>
+          <span>
+            {fileName.length > 35
+              ? `${fileName.slice(0, 25)}...${fileName.slice(-8)}`
+              : fileName}
+          </span>
         </div>
-        {coverImageUrl ? (
-          <Image
-            className="w-[100px] h-[100px] rounded-xl"
-            src={coverImageUrl}
-            width={200}
-            height={200}
-            alt="Cover Image"
-          />
-        ) : (
-          <ImgCrop rotationSlider>
-            <Upload
-              multiple={false}
-              listType="picture-card"
-              fileList={fileList}
-              customRequest={customRequest}
-              onChange={onChange}
-              onPreview={onPreview}
-            >
-              {fileList.length < 5 && '+ Upload'}
-            </Upload>
-          </ImgCrop>
-        )}
+        <ImgCrop rotationSlider>
+          <Upload
+            multiple={false}
+            listType="picture-card"
+            fileList={formattedFileList}
+            customRequest={customRequest}
+            onChange={onChange}
+            onPreview={onPreview}
+          >
+            {'+ Upload'}
+          </Upload>
+        </ImgCrop>
       </div>
     </List.Item>
   );

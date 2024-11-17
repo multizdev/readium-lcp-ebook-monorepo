@@ -28,8 +28,15 @@ function UploadedFile({ item }: { item: ContentWithMetadata }): ReactElement {
               size="small"
               onClick={() => {
                 if (metaDataFormInstance) {
-                  setMetaDataForm(item.id);
-                  metaDataFormInstance.setFieldsValue(item.metadata[0]);
+                  if (item.metadata[0]) {
+                    setMetaDataForm(item.id);
+                    metaDataFormInstance.setFieldsValue(item.metadata[0]);
+                  }
+                  if (!item.metadata[0]) {
+                    console.log('EMPTY');
+                    setMetaDataForm(item.id);
+                    metaDataFormInstance.resetFields();
+                  }
                 }
               }}
             />
