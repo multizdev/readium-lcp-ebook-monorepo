@@ -61,6 +61,8 @@ export async function GET(
       },
     });
 
+    console.log('RESPONSE RECEIVED', response.status);
+
     // Return the .lcpl file as a download response
     const responseData =
       typeof response.data === 'object'
@@ -76,6 +78,8 @@ export async function GET(
       },
     });
   } else {
+    console.log('USER NOT LOGGED IN');
+
     return NextResponse.json(
       { error: 'Could not fetch license' },
       { status: 500 },
