@@ -288,7 +288,11 @@ function MainNavigation({ content }: { content: ReactElement }) {
           </>
         )}
         {/* Main Content */}
-        <main className="flex-grow p-4 pt-[100px]">{content}</main>
+        <main
+          className={`flex-grow ${pathName.includes('admin') ? '' : 'p-4 pt-[100px]'}`}
+        >
+          {content}
+        </main>
       </div>
     </div>
   );

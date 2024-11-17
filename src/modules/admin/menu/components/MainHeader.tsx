@@ -19,7 +19,7 @@ function MainHeader(): ReactElement {
   const { mainMenuCollapsed, setMainMenuCollapsed } = usePortalStore();
 
   return (
-    <div className="w-full h-[80px] shadow-md bg-white border-0 border-b border-b-gray-200 flex justify-between items-center px-4">
+    <div className="w-full h-[80px] shadow-md bg-white border-0 border-b border-b-gray-200 flex justify-between items-center p-4">
       <Button
         type="default"
         size="large"
