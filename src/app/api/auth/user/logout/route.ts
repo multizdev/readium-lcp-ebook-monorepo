@@ -6,7 +6,8 @@ export async function POST(): Promise<NextResponse> {
     const response = NextResponse.json({ message: 'Logout successful' });
     response.cookies.set('userSessionId', '', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      // secure: process.env.NODE_ENV === 'production',
+      secure: false,
       path: '/',
       maxAge: 0, // Expire immediately
     });
