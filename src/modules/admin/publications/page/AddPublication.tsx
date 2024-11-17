@@ -12,7 +12,12 @@ function AddPublication(): ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const scrollToTop = () => {
-    containerRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (containerRef.current) {
+      containerRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
   };
 
   return (
