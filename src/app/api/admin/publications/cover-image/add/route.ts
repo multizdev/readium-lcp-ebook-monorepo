@@ -1,7 +1,6 @@
 import { promises as fs } from 'fs';
-
 import path from 'path';
-
+import sharp from 'sharp'; // Import the sharp library for image processing
 import { NextRequest, NextResponse } from 'next/server';
 
 const ensureUploadsDirectory = async () => {
@@ -10,10 +9,13 @@ const ensureUploadsDirectory = async () => {
   return dir;
 };
 
-const saveFile = async (file: File, filePath: string) => {
+const saveAsPng = async (file: File, filePath: string) => {
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
-  await fs.writeFile(filePath, buffer);
+
+  // Use sharp to convert the image to PNG and save
+  const pngBuffer = await sharp(buffer).png().toBuffer();
+  await fs.writeFile(filePath, pngBuffer);
   return true;
 };
 
@@ -44,10 +46,11 @@ export async function POST(
     // Ensure that the uploads directory exists
     const uploadsDir = await ensureUploadsDirectory();
 
-    // Prepare file path and save the file
-    const fileExtension = path.extname(file.name);
-    const filePath = path.join(uploadsDir, `${id}${fileExtension}`);
-    const saved = await saveFile(file, filePath);
+    // Prepare file path with .png extension
+    const filePath = path.join(uploadsDir, `${id}.png`);
+
+    // Save the file as .png
+    const saved = await saveAsPng(file, filePath);
 
     if (!saved) {
       return NextResponse.json(
@@ -56,7 +59,10 @@ export async function POST(
       );
     }
 
-    return NextResponse.json({ message: 'File uploaded successfully' });
+    return NextResponse.json({
+      message: 'File uploaded successfully',
+      path: filePath,
+    });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
