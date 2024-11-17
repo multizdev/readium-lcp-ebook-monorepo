@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-import sharp from 'sharp'; // Import the sharp library for image processing
+import sharp from 'sharp';
 import { NextRequest, NextResponse } from 'next/server';
 
 const ensureUploadsDirectory = async () => {
@@ -17,6 +17,21 @@ const saveAsPng = async (file: File, filePath: string) => {
   const pngBuffer = await sharp(buffer).png().toBuffer();
   await fs.writeFile(filePath, pngBuffer);
   return true;
+};
+
+const deleteExistingFile = async (filePath: string) => {
+  try {
+    // Check if the file exists
+    await fs.access(filePath);
+    // If it exists, delete it
+    await fs.unlink(filePath);
+  } catch (error) {
+    // If the file does not exist, no action is needed
+    // @ts-ignore
+    if (error instanceof Error && error.code !== 'ENOENT') {
+      throw error; // Throw other errors
+    }
+  }
 };
 
 export async function POST(
@@ -48,6 +63,9 @@ export async function POST(
 
     // Prepare file path with .png extension
     const filePath = path.join(uploadsDir, `${id}.png`);
+
+    // Delete existing file if it exists
+    await deleteExistingFile(filePath);
 
     // Save the file as .png
     const saved = await saveAsPng(file, filePath);
