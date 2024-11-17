@@ -17,7 +17,8 @@ function UploadedFile({
   item: ContentWithMetadata;
   onScrollToTop: () => void;
 }): ReactElement {
-  const { metaDataFormInstance, setMetaDataForm } = usePublicationStore();
+  const { metaDataFormInstance, setMetaDataForm, setMetaDataFormId } =
+    usePublicationStore();
 
   return (
     <List.Item>
@@ -36,6 +37,7 @@ function UploadedFile({
                 if (metaDataFormInstance) {
                   if (item.metadata[0]) {
                     setMetaDataForm(item.id);
+                    setMetaDataFormId(item.metadata[0].id);
                     metaDataFormInstance.setFieldsValue(item.metadata[0]);
                   }
                   if (!item.metadata[0]) {

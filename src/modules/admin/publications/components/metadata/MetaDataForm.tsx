@@ -1,13 +1,19 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 
-import { Button, Form, Input, InputNumber, Select } from 'antd';
+import { Button, Form, Input, InputNumber, message, Select } from 'antd';
 import axios from 'axios';
 
 import usePublicationStore from '@admin/publications/store/usePublicationStore';
 import usePublication from '@admin/publications/hooks/usePublication';
 
 function MetaDataForm(): ReactElement {
-  const { metaDataForm, setMetaDataFormInstance } = usePublicationStore();
+  const {
+    metaDataForm,
+    metaDataFormId,
+    setMetaDataForm,
+    setMetaDataFormId,
+    setMetaDataFormInstance,
+  } = usePublicationStore();
   const { getAllPublications } = usePublication();
 
   const [saving, setSaving] = useState<boolean>(false);
@@ -28,25 +34,35 @@ function MetaDataForm(): ReactElement {
         onFinish={async (values) => {
           setSaving(true);
           try {
-            // Determine the API endpoint based on whether metaDataForm (content ID) exists
-            const url = metaDataForm
-              ? '/api/admin/publications/metadata/update' // Update if content ID exists
-              : '/api/admin/publications/metadata/save'; // Save if no content ID
+            if (metaDataForm) {
+              // Determine the API endpoint based on whether metaDataForm (content ID) exists
+              const url =
+                metaDataForm && metaDataFormId
+                  ? '/api/admin/publications/metadata/update' // Update if content ID exists
+                  : '/api/admin/publications/metadata/save'; // Save if no content ID
 
-            const { data } = await axios.post(url, {
-              values: {
-                ...values,
-                content_id: metaDataForm, // Pass content ID for update or save
-              },
-            });
+              const { data } = await axios.post(url, {
+                values: {
+                  ...values,
+                  content_id: metaDataForm, // Pass content ID for update or save
+                },
+                id: metaDataFormId,
+              });
 
-            if (data) {
-              await getAllPublications();
-              setSaving(false);
-              form.resetFields();
+              if (data) {
+                await getAllPublications();
+                setSaving(false);
+                form.resetFields();
+                setMetaDataForm(null);
+                setMetaDataFormId(null);
+              }
+            } else {
+              message.error('Cannot update');
+              setMetaDataForm(null);
+              setMetaDataFormId(null);
             }
           } catch (error) {
-            console.error('Error submitting metadata:', error);
+            message.error('There was a problem');
             setSaving(false);
           }
         }}
